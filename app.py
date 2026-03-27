@@ -112,7 +112,7 @@ if 'cart' not in st.session_state:
 products = {
     "kaset_bal": {
         "category": "ÖZEL SERİ",
-        "name": "Kaset Bal (Şeker Hastalarına Uygun)",
+        "name": "Kaset Balı (Şeker Hastalarına Uygun)",
         "description": "El değmeden sofranıza gelen katkısız doğal kaset balımız.",
         "tags": ["Erzurum Yaylaları", "Saf"],
         "price": 1250,
@@ -136,7 +136,7 @@ products = {
     },
     "nilay_altin": {
         "category": "PREMIUM",
-        "name": "Nilay Altın Kovan Özel Bal",
+        "name": "Nilay Altın Kovan Özel Balı",
         "description": "Sadece belirli dönemlerde, en öz kovanlardan sınırlı sayıda üretilen Premium serimiz.",
         "tags": ["Sınırlı Üretim", "En Yüksek Kalite"],
         "price": 1500,
