@@ -1,44 +1,32 @@
 import streamlit as st
 import urllib.parse
-import base64
 import os
 
-def get_base64(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as f:
-            return base64.b64encode(f.read()).decode()
-    return ""
-
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="Nilos Ballari | Lux Yoresel Lezzetler", page_icon="images/kaset_bal.png" if os.path.exists("images/kaset_bal.png") else None, layout="centered")
+st.set_page_config(page_title="Niloş Balları | Erzurum Yöresel Lezzetleri", page_icon=":honey_pot:", layout="centered")
 
-# --- ULTRA PREMIUM CUSTOM CSS ---
+# --- PREMIUM CSS ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@500;700&display=swap');
     html, body, [class*="css"] {
         font-family: 'Outfit', sans-serif;
         background-color: #FAF8F5;
         color: #2C241B;
     }
-    .stApp {
-        background-color: #FAF8F5;
-    }
+    .stApp { background-color: #FAF8F5; }
     h1, h2, h3 {
         font-family: 'Playfair Display', serif;
         color: #2C241B;
     }
-
     .brand-header {
         background: linear-gradient(145deg, #ffffff, #FDF7EC);
         border: 1px solid #EADDC7;
         border-radius: 30px;
         padding: 40px 30px;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(186, 153, 113, 0.08);
-        margin-top: 20px;
-        margin-bottom: 50px;
+        box-shadow: 0 20px 40px rgba(186,153,113,0.08);
+        margin-bottom: 40px;
         position: relative;
         overflow: hidden;
     }
@@ -49,246 +37,187 @@ st.markdown("""
         background: linear-gradient(90deg, #D4AF37, #FFDF73, #D4AF37);
     }
     .brand-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: 2px;
-        color: #1A1510;
+        font-size: 2.5rem; font-weight: 700;
+        margin: 15px 0 0; letter-spacing: 2px; color: #1A1510;
     }
     .brand-subtitle {
-        font-size: 1.1rem;
-        color: #8C7A61;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        margin: 10px 0 25px;
+        font-size: 1rem; color: #8C7A61;
+        letter-spacing: 4px; text-transform: uppercase; margin: 8px 0 20px;
     }
     .phone-badge {
-        background-color: #1C3322;
-        color: #E2ECD8;
-        padding: 10px 25px;
-        border-radius: 30px;
-        display: inline-block;
-        font-weight: 600;
-        font-size: 1rem;
-        border: 1px solid #284A31;
+        background-color: #1C3322; color: #E2ECD8;
+        padding: 10px 25px; border-radius: 30px;
+        display: inline-block; font-weight: 600; font-size: 1rem;
     }
-
-    .product-glass-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
-        padding: 30px;
-        border: 1px solid rgba(234, 221, 199, 0.5);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-        margin-bottom: 10px;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
+    .info-card {
+        background: rgba(255,255,255,0.9);
+        border-radius: 0 0 20px 20px;
+        padding: 20px 25px;
+        border: 1px solid rgba(234,221,199,0.5);
+        border-top: none;
+        margin-top: -8px;
+        margin-bottom: 5px;
     }
-    .product-glass-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 50px rgba(212, 175, 55, 0.1);
-        border-color: #D4AF37;
-    }
-    .cat-tag {
-        position: absolute;
-        top: -12px;
-        left: 30px;
-        background: #2C241B;
-        color: #FFDF73;
-        font-size: 0.7rem;
-        font-weight: 800;
-        padding: 5px 15px;
-        border-radius: 12px;
-        letter-spacing: 2px;
+    .cat-label {
+        background: #2C241B; color: #FFDF73;
+        font-size: 0.7rem; font-weight: 800;
+        padding: 5px 15px; border-radius: 12px;
+        letter-spacing: 2px; display: inline-block; margin-bottom: 5px;
     }
     .p-title {
         font-family: 'Playfair Display', serif;
-        font-size: 1.6rem;
-        font-weight: 700;
-        margin: 10px 0;
-        color: #2C241B;
+        font-size: 1.4rem; font-weight: 700; color: #2C241B; margin: 8px 0;
     }
-    .p-desc {
-        color: #635848;
-        font-size: 1rem;
-        margin-bottom: 15px;
-        line-height: 1.6;
-    }
-    .p-tags {
-        color: #A69680;
-        font-size: 0.85rem;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-    }
+    .p-desc { color: #635848; font-size: 0.95rem; line-height: 1.6; }
+    .p-tags { margin: 10px 0; }
     .p-tags span {
-        background: #F4EEDF;
-        padding: 4px 10px;
-        border-radius: 8px;
+        background: #F4EEDF; padding: 4px 10px;
+        border-radius: 8px; font-size: 0.8rem; color: #A69680;
+        margin-right: 8px;
     }
     .price-box {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #1A1510;
-        font-family: 'Outfit', sans-serif;
+        font-size: 1.6rem; font-weight: 800; color: #1A1510; margin-top: 10px;
     }
-    .price-box span {
-        font-size: 1rem;
-        color: #A69680;
-        font-weight: 400;
-    }
-
+    .price-box span { font-size: 0.9rem; color: #A69680; font-weight: 400; }
     .stButton>button {
         background: linear-gradient(135deg, #10B981, #059669);
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 10px;
-        font-weight: 600;
-        font-family: 'Outfit', sans-serif;
-        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
-        transition: all 0.3s;
+        color: white; border: none; border-radius: 20px;
+        font-weight: 600; box-shadow: 0 10px 20px rgba(16,185,129,0.2);
     }
     .stButton>button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 15px 25px rgba(16, 185, 129, 0.4);
         background: linear-gradient(135deg, #059669, #047857);
+        transform: scale(1.03);
     }
-
     .whatsapp-btn {
         background: linear-gradient(135deg, #25D366, #128C7E);
-        color: white;
-        text-decoration: none;
-        padding: 18px 30px;
-        border-radius: 16px;
-        display: block;
-        font-weight: 800;
-        font-size: 1.2rem;
-        text-align: center;
-        letter-spacing: 1px;
-        width: 100%;
-        margin-top: 30px;
-        box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3);
-        transition: all 0.4s ease;
+        color: white; text-decoration: none;
+        padding: 18px 30px; border-radius: 16px;
+        display: block; font-weight: 800; font-size: 1.2rem;
+        text-align: center; width: 100%; margin-top: 25px;
+        box-shadow: 0 15px 30px rgba(37,211,102,0.3);
     }
-    .whatsapp-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 20px 40px rgba(37, 211, 102, 0.5);
-    }
+    .whatsapp-btn:hover { transform: translateY(-3px); }
 </style>
 """, unsafe_allow_html=True)
 
-# --- INIT SESSION STATE ---
+# --- SESSION STATE ---
 if 'cart' not in st.session_state:
     st.session_state['cart'] = {}
 
-# --- PRODUCT DATA (LOCAL IMAGES) ---
+# --- ÜRÜN VERİLERİ ---
 products = {
     "kaset_bal": {
-        "category": "OZEL SERI",
-        "name": "Kaset Bal (Seker Hastalarina Uygun)",
-        "description": "El degmeden sofraniza gelen katkisiz dogal kaset balimiz.",
-        "tags": ["Erzurum Yaylalari", "Saf"],
+        "category": "ÖZEL SERİ",
+        "name": "Kaset Bal (Şeker Hastalarına Uygun)",
+        "description": "El değmeden sofranıza gelen katkısız doğal kaset balımız.",
+        "tags": ["Erzurum Yaylaları", "Saf"],
         "price": 1250,
         "image": "images/kaset_bal.png"
     },
     "cicek_bali": {
-        "category": "KLASIK BAL",
-        "name": "Erzurum Cicek Bali",
-        "description": "Erzurum yaylalarinin binbir cesit gulunden ve ciceginden elde edilmis nefis aromali.",
-        "tags": ["Tamamen Dogal", "Saf Bal"],
+        "category": "KLASİK BAL",
+        "name": "Erzurum Çiçek Balı",
+        "description": "Erzurum yaylalarının binbir çeşit gülünden ve çiçeğinden elde edilmiş nefis aromalı.",
+        "tags": ["Tamamen Doğal", "Saf Bal"],
         "price": 850,
         "image": "images/cicek_bali.png"
     },
     "karakovan": {
         "category": "GELENEKSEL",
-        "name": "Hakiki Karakovan Bali",
-        "description": "Atalarimizin yontemleriyle hazirlanan tamamen dogal karakovan bali.",
-        "tags": ["Yuksek Aromali", "Katkisiz"],
+        "name": "Hakiki Karakovan Balı",
+        "description": "Atalarımızın yöntemleriyle hazırlanan tamamen doğal karakovan balı.",
+        "tags": ["Yüksek Aromalı", "Katkısız"],
         "price": 1250,
         "image": "images/karakovan.png"
     },
     "nilay_altin": {
         "category": "PREMIUM",
-        "name": "Nilay Altin Kovan Ozel Bal",
-        "description": "Sadece belirli donemlerde, en oz kovanlardan sinirli sayida uretilen Premium serimiz.",
-        "tags": ["Sinirli Uretim", "En Yuksek Kalite"],
+        "name": "Nilay Altın Kovan Özel Bal",
+        "description": "Sadece belirli dönemlerde, en öz kovanlardan sınırlı sayıda üretilen Premium serimiz.",
+        "tags": ["Sınırlı Üretim", "En Yüksek Kalite"],
         "price": 1500,
         "image": "images/nilay_altin.png"
     },
     "dut_pekmezi": {
-        "category": "SIFA DEPOSU",
+        "category": "ŞİFA DEPOSU",
         "name": "Erzurum Dut Pekmezi",
-        "description": "Erzurum yoresinin ozenle secilmis dutlarindan kaynatilan dogal pekmez.",
-        "tags": ["Katkisiz", "Geleneksel"],
+        "description": "Erzurum yöresinin özenle seçilmiş dutlarından kaynatılan doğal pekmez.",
+        "tags": ["Katkısız", "Geleneksel"],
         "price": 750,
         "image": "images/dut_pekmezi.png"
     },
     "uzum_pekmezi": {
-        "category": "SIFA DEPOSU",
-        "name": "Hakiki Uzum Pekmezi",
-        "description": "Geleneksel yontemlerle, saatlerce kaynatilarak hazirlanan Erzurum uzum pekmezi.",
-        "tags": ["Seker Ilavesiz", "Enerji"],
+        "category": "ŞİFA DEPOSU",
+        "name": "Hakiki Üzüm Pekmezi",
+        "description": "Geleneksel yöntemlerle, saatlerce kaynatılarak hazırlanan Erzurum üzüm pekmezi.",
+        "tags": ["Şeker İlavesiz", "Enerji"],
         "price": 750,
         "image": "images/uzum_pekmezi.png"
     },
     "cevizli_sucuk": {
-        "category": "YORESEL TATLI",
+        "category": "YÖRESEL TATLI",
         "name": "Bol Cevizli Sucuk",
-        "description": "Bol cevizli ve nefis uzum sirasi ile hazirlanan mukemmel enerji veren atistirmalik.",
+        "description": "Bol cevizli ve nefis üzüm şırası ile hazırlanan mükemmel enerji veren atıştırmalık.",
         "tags": ["Ceviz Dolgulu", "Organik"],
         "price": 550,
         "image": "images/cevizli_sucuk.png"
     },
     "pestil_bastik": {
-        "category": "YORESEL TATLI",
-        "name": "Pestil - Bastik",
-        "description": "Guneste kurutulmus, dogal meyve aromali geleneksel Erzurum pestili.",
-        "tags": ["Dogal", "Enerji"],
+        "category": "YÖRESEL TATLI",
+        "name": "Pestil - Bastık",
+        "description": "Güneşte kurutulmuş, doğal meyve aromalı geleneksel Erzurum pestili.",
+        "tags": ["Doğal", "Enerji"],
         "price": 450,
         "image": "images/pestil_bastik.png"
     },
     "yayla_tereyagi": {
-        "category": "DOGAL SUT URUNU",
-        "name": "Hakiki Yayla Tereyagi",
-        "description": "Erzurum yaylalarinda otlayan sansl ineklerin sutunden elde edilen katkisiz koy tereyagi.",
-        "tags": ["Katkisiz", "Mis Kokulu"],
+        "category": "DOĞAL SÜT ÜRÜNÜ",
+        "name": "Hakiki Yayla Tereyağı",
+        "description": "Erzurum yaylalarında otlayan ineklerin sütünden elde edilen katkısız köy tereyağı.",
+        "tags": ["Katkısız", "Mis Kokulu"],
         "price": 550,
         "image": "images/yayla_tereyagi.png"
     }
 }
 
-# --- HEADER SECTION with LOCAL LOGO ---
-logo_b64 = get_base64("logo.png")
-st.markdown(f"""
-<div class="brand-header">
-    <img src="data:image/png;base64,{logo_b64}" style="width:120px; height:120px; border-radius:50%; border:3px solid #D4AF37; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4); margin-bottom: 20px;" alt="Logo">
-    <h1 class="brand-title">NILOS BALLARI</h1>
-    <div class="brand-subtitle">Erzurum Yoresel Lezzetleri</div>
-    <div class="phone-badge">0542 563 32 89</div>
+# --- LOGO (st.image ile - kesin çalışır) ---
+col_logo_left, col_logo_center, col_logo_right = st.columns([1, 2, 1])
+with col_logo_center:
+    if os.path.exists("logo.png"):
+        logo_bytes = open("logo.png", "rb").read()
+        st.image(logo_bytes, width="stretch")
+
+st.markdown("""
+<div style="text-align: center; margin-bottom: 40px;">
+    <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #1A1510; letter-spacing: 2px;">NİLOŞ BALLARI</div>
+    <div style="font-size: 1rem; color: #8C7A61; letter-spacing: 4px; text-transform: uppercase; margin: 8px 0 20px;">ERZURUM YÖRESEL LEZZETLERİ</div>
+    <div style="background-color: #1C3322; color: #E2ECD8; padding: 10px 25px; border-radius: 30px; display: inline-block; font-weight: 600;">Sipariş Hattı: 0542 563 32 89</div>
 </div>
 """, unsafe_allow_html=True)
 
-# --- TANITIM VIDEO ---
+# --- TANITIM VİDEOSU ---
 if os.path.exists("tanitim.mp4"):
-    st.markdown("<h2 style='text-align: center;'>Tanitim Videomuz</h2>", unsafe_allow_html=True)
-    st.video("tanitim.mp4")
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("## Tanıtım Videomuz")
+    video_bytes = open("tanitim.mp4", "rb").read()
+    st.video(video_bytes)
+    st.markdown("---")
 
-# --- PRODUCTS LIST ---
-st.markdown("<h2 style='text-align: center; margin-bottom: 30px;'>Koleksiyonumuz</h2>", unsafe_allow_html=True)
+# --- ÜRÜNLER ---
+st.markdown("## Koleksiyonumuz")
 
 for p_id, p in products.items():
     tags_html = "".join([f"<span>{tag}</span>" for tag in p['tags']])
     
-    # Load image as base64 - same method as logo (which works!)
-    img_b64 = get_base64(p['image'])
+    st.markdown(f'<div class="cat-label">{p["category"]}</div>', unsafe_allow_html=True)
+    
+    # FOTOĞRAF: bytes olarak oku ve st.image ile göster - BU KESİN ÇALIŞIR
+    img_path = p['image']
+    if os.path.exists(img_path):
+        img_bytes = open(img_path, "rb").read()
+        st.image(img_bytes, width="stretch")
     
     st.markdown(f"""
-    <div class="product-glass-card">
-        <div class="cat-tag">{p['category']}</div>
-        <img src="data:image/png;base64,{img_b64}" style="width:100%; height:280px; object-fit:cover; border-radius:18px; margin: 15px 0;" alt="{p['name']}">
+    <div class="info-card">
         <div class="p-title">{p['name']}</div>
         <div class="p-desc">{p['description']}</div>
         <div class="p-tags">{tags_html}</div>
@@ -296,33 +225,27 @@ for p_id, p in products.items():
     </div>
     """, unsafe_allow_html=True)
     
-    col_space, col_btn = st.columns([2,1])
-    with col_btn:
+    col1, col2 = st.columns([2, 1])
+    with col2:
         if st.button("Sepete Ekle", key=f"btn_{p_id}", use_container_width=True):
             if p_id in st.session_state['cart']:
                 st.session_state['cart'][p_id] += 1
             else:
                 st.session_state['cart'][p_id] = 1
             st.toast(f"{p['name']} sepete eklendi!")
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+    st.markdown("")
 
-# --- CART SECTION ---
-st.markdown("<h2 style='text-align: center; margin-top: 50px;'>Alisveris Sepeti</h2>", unsafe_allow_html=True)
+# --- SEPET ---
+st.markdown("## Alışveriş Sepeti")
 
 total_price = 0
 if not st.session_state['cart']:
-    st.markdown("""
-    <div style='text-align:center; padding: 40px; border: 1px dashed #D4AF37; border-radius: 20px; color: #8C7A61;'>
-        Sepetiniz su an zarif lezzetler icin bekliyor.
-    </div>
-    """, unsafe_allow_html=True)
+    st.info("Sepetiniz şu an boş. Yukarıdan ürün ekleyebilirsiniz.")
 else:
-    st.markdown("<div class='product-glass-card' style='padding: 20px;'>", unsafe_allow_html=True)
     for p_id, qty in st.session_state['cart'].items():
         product = products[p_id]
         price = product['price'] * qty
         total_price += price
-        
         c1, c2 = st.columns([5, 1])
         with c1:
             st.write(f"**{product['name']}**  \n{qty} adet x {product['price']} TL")
@@ -330,49 +253,48 @@ else:
             if st.button("Sil", key=f"del_{p_id}"):
                 del st.session_state['cart'][p_id]
                 st.rerun()
-                
-    st.markdown(f"<div style='text-align:right; font-size:1.5rem; font-weight:800; font-family: Outfit; color: #2C241B; border-top: 1px solid #EADDC7; margin-top: 20px; padding-top: 20px;'>Toplam: {total_price} TL</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
     
-    st.markdown("<h3 style='margin-top:40px;'>Teslimat Detaylari</h3>", unsafe_allow_html=True)
+    st.markdown(f"### Toplam: {total_price} TL")
+    
+    st.markdown("### Teslimat Bilgileri")
     with st.form("checkout_form"):
-        name = st.text_input("Adiniz ve Soyadiniz")
-        address = st.text_area("Acik Teslimat Adresi")
-        payment_method = st.selectbox("Tercih Edilen Odeme", ["Kapida Nakit", "Kapida Kredi Karti", "Havale / EFT"])
+        name = st.text_input("Adınız ve Soyadınız")
+        address = st.text_area("Açık Teslimat Adresi")
+        payment_method = st.selectbox("Ödeme Yöntemi", ["Kapıda Nakit Ödeme", "Kapıda Kredi Kartı", "Havale / EFT"])
         
-        submit_order = st.form_submit_button("Siparisi Onayla")
+        submit_order = st.form_submit_button("Siparişi Onayla")
         
         if submit_order:
             if not name or not address:
-                st.error("Lutfen bilgileri eksiksiz doldurun.")
+                st.error("Lütfen bilgileri eksiksiz doldurun.")
             else:
                 phone_number = "905425633289"
                 msg_lines = [
-                    "YENI SIPARIS - NILOS BALLARI",
+                    "YENİ SİPARİŞ - NİLOŞ BALLARI",
                     "------------------------",
-                    f"Musteri: {name}",
+                    f"Müşteri: {name}",
                     f"Adres: {address}",
-                    f"Odeme: {payment_method}",
+                    f"Ödeme: {payment_method}",
                     "------------------------",
-                    "Siparis Icerigi:"
+                    "Sipariş İçeriği:"
                 ]
                 for p_id, qty in st.session_state['cart'].items():
                     msg_lines.append(f"- {qty}x {products[p_id]['name']} ({products[p_id]['price'] * qty} TL)")
-                
                 msg_lines.append("------------------------")
                 msg_lines.append(f"TOPLAM: {total_price} TL")
                 
                 encoded_msg = urllib.parse.quote("\n".join(msg_lines))
                 wa_url = f"https://wa.me/{phone_number}?text={encoded_msg}"
                 
-                st.success("Siparisiniz sevgiyle hazirlandi. WhatsApp uzerinden iletmek icin butona tiklayin.")
-                st.markdown(f'<a href="{wa_url}" target="_blank" class="whatsapp-btn">Siparisi Whatsapp ile Ilet</a>', unsafe_allow_html=True)
+                st.success("Siparişiniz hazırlandı! WhatsApp ile göndermek için aşağıya tıklayın.")
+                st.markdown(f'<a href="{wa_url}" target="_blank" class="whatsapp-btn">WhatsApp ile Siparişi Gönder</a>', unsafe_allow_html=True)
 
 # --- FOOTER ---
+st.markdown("---")
 st.markdown("""
-<div style="text-align:center; padding:40px 20px; margin-top: 40px; border-top: 1px solid #EADDC7;">
-    <div style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color:#2C241B; font-weight: 700;">Nilos Ballari</div>
-    <div style="color:#A69680; margin-top: 10px; font-size: 0.9rem;">Dogadan sofraniza, lux ve katkisiz Erzurum lezzetleri.</div>
-    <div style="color:#A69680; margin-top: 5px; font-size: 0.9rem;">0542 563 32 89</div>
+<div style="text-align:center; padding:30px;">
+    <div style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color:#2C241B; font-weight: 700;">Niloş Balları</div>
+    <div style="color:#A69680; margin-top: 8px;">Doğadan sofranıza, katkısız Erzurum lezzetleri.</div>
+    <div style="color:#A69680; margin-top: 5px;">Sipariş: 0542 563 32 89</div>
 </div>
 """, unsafe_allow_html=True)
