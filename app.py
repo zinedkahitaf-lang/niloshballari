@@ -238,11 +238,7 @@ with col_sidebar:
                     
                     st.success("Siparişiniz hazır! Lütfen aşağıdaki butona tıklayarak bilgileri bize WhatsApp üzerinden iletin.")
                     st.markdown(f'<a href="{wa_url}" target="_blank" class="whatsapp-btn">📱 WhatsApp ile Gönder</a>', unsafe_allow_html=True)
-                    
-                    # Clear cart after order option (optional)
-                    if st.button("Sepeti Temizle ve Yeni Sipariş Ver"):
-                        st.session_state['cart'] = {}
-                        st.rerun()
+
 
 # --- FOOTER ---
 st.markdown("---")
