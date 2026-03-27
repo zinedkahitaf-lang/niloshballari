@@ -1,5 +1,16 @@
 import streamlit as st
 import urllib.parse
+import base64
+import os
+
+def get_base64_of_bin_file(bin_file):
+    if os.path.exists(bin_file):
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    return ""
+
+logo_base64 = get_base64_of_bin_file('logo.png')
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Niloş Balları | Lüks Yöresel Lezzetler", page_icon="🍯", layout="centered")
@@ -51,17 +62,19 @@ st.markdown("""
     }
     
     .logo-circle {
-        background: linear-gradient(135deg, #FFDF73, #D4AF37);
-        width: 80px; height: 80px;
-        border-radius: 50%;
+        background-color: transparent;
+        width: 120px; height: 120px;
+        margin: 0 auto 20px;
         display: flex;
         align-items: center; justify-content: center;
-        margin: 0 auto 20px;
-        color: white;
-        font-size: 36px;
-        font-weight: 800;
-        font-family: 'Playfair Display', serif;
-        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    }
+    .logo-circle img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
+        border: 2px solid #D4AF37;
     }
     
     .brand-title {
@@ -260,9 +273,9 @@ products = {
 }
 
 # --- HEADER SECTION ---
-st.markdown("""
+st.markdown(f"""
 <div class="brand-header">
-    <div class="logo-circle">N</div>
+    <div class="logo-circle"><img src="data:image/png;base64,{logo_base64}" alt="Niloş Balları Logo"></div>
     <h1 class="brand-title">NİLOŞ BALLARI</h1>
     <div class="brand-subtitle">Erzurum Yöresel Lezzetleri</div>
     <div class="phone-badge">☎ 0542 563 32 89</div>
