@@ -233,7 +233,7 @@ products = {
         "name": "Erzurum Çiçek Balı",
         "description": "Erzurum yaylalarının binbir çeşit gülünden ve çiçeğinden elde edilmiş nefis aromalı.",
         "tags": ["Tamamen Doğal", "Saf Bal"],
-        "price": 1100 # Was 850 + 250
+        "price": 850
     },
     "karakovan": {
         "category": "GELENEKSEL",
