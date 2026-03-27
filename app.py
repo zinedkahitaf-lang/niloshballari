@@ -226,63 +226,72 @@ products = {
         "name": "Kaset Bal (Şeker Hastalarına Uygun)",
         "description": "El değmeden sofranıza gelen katkısız doğal kaset balımız.",
         "tags": ["Erzurum Yaylaları", "Saf"],
-        "price": 1250 # Was 1000 + 250
+        "price": 1250,
+        "image": "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=500&auto=format&fit=crop"
     },
     "cicek_bali": {
         "category": "KLASİK BAL",
         "name": "Erzurum Çiçek Balı",
         "description": "Erzurum yaylalarının binbir çeşit gülünden ve çiçeğinden elde edilmiş nefis aromalı.",
         "tags": ["Tamamen Doğal", "Saf Bal"],
-        "price": 850
+        "price": 850,
+        "image": "https://images.unsplash.com/photo-1587049352851-8d4e89134781?w=500&auto=format&fit=crop"
     },
     "karakovan": {
         "category": "GELENEKSEL",
         "name": "Hakiki Karakovan Balı",
         "description": "Atalarımızın yöntemleriyle hazırlanan tamamen doğal karakovan balı.",
         "tags": ["Yüksek Aromalı", "Katkısız"],
-        "price": 1250 # Was 1000 + 250
+        "price": 1250,
+        "image": "https://images.unsplash.com/photo-1594895642597-20092224a18a?w=500&auto=format&fit=crop"
     },
     "nilay_altin": {
         "category": "PREMIUM",
         "name": "Nilay Altın Kovan Özel Bal",
         "description": "Sadece belirli dönemlerde, en öz kovanlardan sınırlı sayıda üretilen Premium serimiz.",
         "tags": ["Sınırlı Üretim", "En Yüksek Kalite"],
-        "price": 1500 # Was 1250 + 250
+        "price": 1500,
+        "image": "https://images.unsplash.com/photo-1620063236306-381c00f3c5b5?w=500&auto=format&fit=crop"
     },
     "dut_pekmezi": {
         "category": "ŞİFA DEPOSU",
         "name": "Erzurum Dut Pekmezi",
         "description": "Erzurum yöresinin özenle seçilmiş dutlarından kaynatılan doğal pekmez.",
         "tags": ["Katkısız", "Geleneksel"],
-        "price": 750
+        "price": 750,
+        "image": "https://images.unsplash.com/photo-1528699633788-424224dc89b5?w=500&auto=format&fit=crop"
     },
     "uzum_pekmezi": {
         "category": "ŞİFA DEPOSU",
         "name": "Hakiki Üzüm Pekmezi",
         "description": "Geleneksel yöntemlerle, saatlerce kaynatılarak hazırlanan Erzurum üzüm pekmezi.",
         "tags": ["Şeker İlavesiz", "Enerji"],
-        "price": 750
+        "price": 750,
+        "image": "https://images.unsplash.com/photo-1587049352849-df6365f5a8ad?w=500&auto=format&fit=crop"
     },
     "cevizli_sucuk": {
         "category": "YÖRESEL TATLI",
         "name": "Bol Cevizli Sucuk",
         "description": "Bol cevizli ve nefis üzüm şırası ile hazırlanan mükemmel enerji veren atıştırmalık.",
         "tags": ["Ceviz Dolgulu", "Organik"],
-        "price": 550
+        "price": 550,
+        "image": "https://images.unsplash.com/photo-1621285315354-f5bb5b6b1076?w=500&auto=format&fit=crop"
     },
     "pestil_bastik": {
         "category": "YÖRESEL TATLI",
         "name": "Pestil - Bastık",
         "description": "Güneşte kurutulmuş, doğal meyve aromalı geleneksel Erzurum pestili.",
         "tags": ["Doğal", "Enerji"],
-        "price": 450
+        "price": 450,
+        "image": "https://images.unsplash.com/photo-1596455607563-ad6193f76b17?w=500&auto=format&fit=crop"
     },
     "yayla_tereyagi": {
         "category": "DOĞAL SÜT ÜRÜNÜ",
         "name": "Hakiki Yayla Tereyağı",
         "description": "Erzurum yaylalarında otlayan şanslı ineklerin sütünden elde edilen katkısız köy tereyağı.",
         "tags": ["Katkısız", "Mis Kokulu"],
-        "price": 550
+        "price": 550,
+        "image": "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500&auto=format&fit=crop"
     }
 }
 
@@ -305,6 +314,7 @@ for p_id, p in products.items():
     st.markdown(f"""
     <div class="product-glass-card">
         <div class="cat-tag">{p['category']}</div>
+        <img src="{p['image']}" style="width:100%; height:250px; object-fit:cover; border-radius:18px; margin-bottom:15px;" alt="{p['name']}">
         <div class="p-title">{p['name']}</div>
         <div class="p-desc">{p['description']}</div>
         <div class="p-tags">{tags_html}</div>
