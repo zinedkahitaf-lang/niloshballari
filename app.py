@@ -3,6 +3,7 @@ import urllib.parse
 import os
 import pathlib
 from PIL import Image
+import openai
 
 BASE_DIR = pathlib.Path(__file__).parent
 
@@ -107,6 +108,8 @@ st.markdown("""
 # --- SESSION STATE ---
 if 'cart' not in st.session_state:
     st.session_state['cart'] = {}
+if 'messages' not in st.session_state:
+    st.session_state['messages'] = []
 
 # --- ÜRÜN VERİLERİ ---
 products = {
@@ -211,14 +214,10 @@ st.markdown("## Koleksiyonumuz")
 
 for p_id, p in products.items():
     tags_html = "".join([f"<span>{tag}</span>" for tag in p['tags']])
-    
     st.markdown(f'<div class="cat-label">{p["category"]}</div>', unsafe_allow_html=True)
-    
-    # FOTOĞRAF: PIL Image ile aç ve göster
     img_path = BASE_DIR / p['image']
     if img_path.exists():
         st.image(Image.open(img_path))
-    
     st.markdown(f"""
     <div class="info-card">
         <div class="p-title">{p['name']}</div>
@@ -227,7 +226,6 @@ for p_id, p in products.items():
         <div class="price-box">{p['price']} <span>TL / kg</span></div>
     </div>
     """, unsafe_allow_html=True)
-    
     col1, col2 = st.columns([2, 1])
     with col2:
         if st.button("Sepete Ekle", key=f"btn_{p_id}", use_container_width=True):
@@ -240,64 +238,57 @@ for p_id, p in products.items():
 
 # --- SEPET ---
 st.markdown("## Alışveriş Sepeti")
-
 total_price = 0
 if not st.session_state['cart']:
-    st.info("Sepetiniz şu an boş. Yukarıdan ürün ekleyebilirsiniz.")
+    st.info("Sepetiniz şu an boş.")
 else:
     for p_id, qty in st.session_state['cart'].items():
         product = products[p_id]
         price = product['price'] * qty
         total_price += price
-        c1, c2 = st.columns([5, 1])
-        with c1:
-            st.write(f"**{product['name']}**  \n{qty} adet x {product['price']} TL")
-        with c2:
-            if st.button("Sil", key=f"del_{p_id}"):
-                del st.session_state['cart'][p_id]
-                st.rerun()
+        st.markdown(f"**{product['name']}** x {qty}: **{price} TL**")
     
     st.markdown(f"### Toplam: {total_price} TL")
-    
-    st.markdown("### Teslimat Bilgileri")
-    with st.form("checkout_form"):
-        name = st.text_input("Adınız ve Soyadınız")
-        address = st.text_area("Açık Teslimat Adresi")
-        payment_method = st.selectbox("Ödeme Yöntemi", ["Kapıda Nakit Ödeme", "Kapıda Kredi Kartı", "Havale / EFT"])
-        
-        submit_order = st.form_submit_button("Siparişi Onayla")
-        
-        if submit_order:
-            if not name or not address:
-                st.error("Lütfen bilgileri eksiksiz doldurun.")
-            else:
-                phone_number = "905425633289"
-                msg_lines = [
-                    "YENİ SİPARİŞ - NİLOŞ BALLARI",
-                    "------------------------",
-                    f"Müşteri: {name}",
-                    f"Adres: {address}",
-                    f"Ödeme: {payment_method}",
-                    "------------------------",
-                    "Sipariş İçeriği:"
-                ]
-                for p_id, qty in st.session_state['cart'].items():
-                    msg_lines.append(f"- {qty}x {products[p_id]['name']} ({products[p_id]['price'] * qty} TL)")
-                msg_lines.append("------------------------")
-                msg_lines.append(f"TOPLAM: {total_price} TL")
-                
-                encoded_msg = urllib.parse.quote("\n".join(msg_lines))
-                wa_url = f"https://wa.me/{phone_number}?text={encoded_msg}"
-                
-                st.success("Siparişiniz hazırlandı! WhatsApp ile göndermek için aşağıya tıklayın.")
-                st.markdown(f'<a href="{wa_url}" target="_blank" class="whatsapp-btn">WhatsApp ile Siparişi Gönder</a>', unsafe_allow_html=True)
+    whatsapp_msg = f"Merhaba, Nilosh Ballari sayfasından şunları sipariş etmek istiyorum:\n"
+    for p_id, qty in st.session_state['cart'].items():
+        whatsapp_msg += f"- {products[p_id]['name']} x {qty}\n"
+    whatsapp_msg += f"\nToplam Tutar: {total_price} TL"
+    encoded_msg = urllib.parse.quote(whatsapp_msg)
+    whatsapp_link = f'<a href="https://wa.me/905425633289?text={encoded_msg}" class="whatsapp-btn" target="_blank">WhatsApp ile Siparişi Tamamla</a>'
+    st.markdown(whatsapp_link, unsafe_allow_html=True)
+    if st.button("Sepeti Temizle"):
+        st.session_state['cart'] = {}
+        st.rerun()
 
-# --- FOOTER ---
+# --- ARIKOVANI ASİSTANI (CHATBOT) ---
+with st.sidebar:
+    st.markdown("### 🍯 Arıkovanı Asistanı")
+    st.info("Ben Niloş Balları'nın şifa uzmanıyım. Sorularınız için buradayım!")
+    
+    # Güvenli API Anahtarı (Streamlit Cloud Secrets'tan okur)
+    try:
+        api_key = st.secrets["OPENAI_API_KEY"]
+        client = openai.OpenAI(api_key=api_key)
+        
+        # Botun her şeyi bilmesi için ürün listesi
+        p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
+        system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
+
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        if prompt := st.chat_input("Bana bir şey sor..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            with st.chat_message("assistant"):
+                response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role":"system","content":system_msg}]+st.session_state.messages)
+                full_resp = response.choices[0].message.content
+                st.markdown(full_resp)
+            st.session_state.messages.append({"role": "assistant", "content": full_resp})
+    except Exception:
+        st.warning("🤖 Asistan şu an kovanında dinleniyor. (API Anahtarı eksik)")
+
 st.markdown("---")
-st.markdown("""
-<div style="text-align:center; padding:30px;">
-    <div style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color:#2C241B; font-weight: 700;">Niloş Balları</div>
-    <div style="color:#A69680; margin-top: 8px;">Doğadan sofranıza, katkısız Erzurum lezzetleri.</div>
-    <div style="color:#A69680; margin-top: 5px;">Sipariş: 0542 563 32 89</div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: #8C7A61; font-size: 0.8rem;'>© 2026 Niloş Balları - Erzurum Karayazı Köy Ürünleri</div>", unsafe_allow_html=True)
