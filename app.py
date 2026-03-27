@@ -254,14 +254,14 @@ products = {
         "name": "Erzurum Dut Pekmezi",
         "description": "Erzurum yöresinin özenle seçilmiş dutlarından kaynatılan doğal pekmez.",
         "tags": ["Katkısız", "Geleneksel"],
-        "price": 1000 # Was 750 + 250
+        "price": 750
     },
     "uzum_pekmezi": {
         "category": "ŞİFA DEPOSU",
         "name": "Hakiki Üzüm Pekmezi",
         "description": "Geleneksel yöntemlerle, saatlerce kaynatılarak hazırlanan Erzurum üzüm pekmezi.",
         "tags": ["Şeker İlavesiz", "Enerji"],
-        "price": 1000 # Was 750 + 250
+        "price": 750
     },
     "cevizli_sucuk": {
         "category": "YÖRESEL TATLI",
