@@ -269,6 +269,20 @@ products = {
         "description": "Bol cevizli ve nefis üzüm şırası ile hazırlanan mükemmel enerji veren atıştırmalık.",
         "tags": ["Ceviz Dolgulu", "Organik"],
         "price": 550
+    },
+    "pestil_bastik": {
+        "category": "YÖRESEL TATLI",
+        "name": "Pestil - Bastık",
+        "description": "Güneşte kurutulmuş, doğal meyve aromalı geleneksel Erzurum pestili.",
+        "tags": ["Doğal", "Enerji"],
+        "price": 450
+    },
+    "yayla_tereyagi": {
+        "category": "DOĞAL SÜT ÜRÜNÜ",
+        "name": "Hakiki Yayla Tereyağı",
+        "description": "Erzurum yaylalarında otlayan şanslı ineklerin sütünden elde edilen katkısız köy tereyağı.",
+        "tags": ["Katkısız", "Mis Kokulu"],
+        "price": 550
     }
 }
 
