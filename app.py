@@ -227,7 +227,7 @@ products = {
         "description": "El değmeden sofranıza gelen katkısız doğal kaset balımız.",
         "tags": ["Erzurum Yaylaları", "Saf"],
         "price": 1250,
-        "image": "https://image.pollinations.ai/prompt/photorealistic_natural_honeycomb_macro_golden_honey_rustic?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Honeycomb-close-up.jpg/640px-Honeycomb-close-up.jpg"
     },
     "cicek_bali": {
         "category": "KLASİK BAL",
@@ -235,7 +235,7 @@ products = {
         "description": "Erzurum yaylalarının binbir çeşit gülünden ve çiçeğinden elde edilmiş nefis aromalı.",
         "tags": ["Tamamen Doğal", "Saf Bal"],
         "price": 850,
-        "image": "https://image.pollinations.ai/prompt/jar_of_pure_golden_liquid_honey_with_wooden_dipper_rustic?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Honey_dipper_with_honey_in_a_glass_jar.jpg/640px-Honey_dipper_with_honey_in_a_glass_jar.jpg"
     },
     "karakovan": {
         "category": "GELENEKSEL",
@@ -243,7 +243,7 @@ products = {
         "description": "Atalarımızın yöntemleriyle hazırlanan tamamen doğal karakovan balı.",
         "tags": ["Yüksek Aromalı", "Katkısız"],
         "price": 1250,
-        "image": "https://image.pollinations.ai/prompt/dark_wild_honeycomb_in_a_glass_jar_premium_food_photography?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Honeycomb_in_glass_jar.jpg/640px-Honeycomb_in_glass_jar.jpg"
     },
     "nilay_altin": {
         "category": "PREMIUM",
@@ -251,7 +251,7 @@ products = {
         "description": "Sadece belirli dönemlerde, en öz kovanlardan sınırlı sayıda üretilen Premium serimiz.",
         "tags": ["Sınırlı Üretim", "En Yüksek Kalite"],
         "price": 1500,
-        "image": "https://image.pollinations.ai/prompt/luxurious_premium_honey_jar_with_gold_label_glowing_amber_honey?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Honey_jar_and_dipper.jpg/640px-Honey_jar_and_dipper.jpg"
     },
     "dut_pekmezi": {
         "category": "ŞİFA DEPOSU",
@@ -259,7 +259,7 @@ products = {
         "description": "Erzurum yöresinin özenle seçilmiş dutlarından kaynatılan doğal pekmez.",
         "tags": ["Katkısız", "Geleneksel"],
         "price": 750,
-        "image": "https://image.pollinations.ai/prompt/dark_thick_mulberry_molasses_in_a_bowl_with_fresh_mulberries?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Carob_molasses_Harnup_pekmezi.jpg/640px-Carob_molasses_Harnup_pekmezi.jpg"
     },
     "uzum_pekmezi": {
         "category": "ŞİFA DEPOSU",
@@ -267,7 +267,7 @@ products = {
         "description": "Geleneksel yöntemlerle, saatlerce kaynatılarak hazırlanan Erzurum üzüm pekmezi.",
         "tags": ["Şeker İlavesiz", "Enerji"],
         "price": 750,
-        "image": "https://image.pollinations.ai/prompt/dark_grape_molasses_syrup_pouring_into_jar_rustic_table?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Carob_molasses_Harnup_pekmezi.jpg/640px-Carob_molasses_Harnup_pekmezi.jpg"
     },
     "cevizli_sucuk": {
         "category": "YÖRESEL TATLI",
@@ -275,7 +275,7 @@ products = {
         "description": "Bol cevizli ve nefis üzüm şırası ile hazırlanan mükemmel enerji veren atıştırmalık.",
         "tags": ["Ceviz Dolgulu", "Organik"],
         "price": 550,
-        "image": "https://image.pollinations.ai/prompt/traditional_turkish_churchkhela_walnut_sausage_sweet_dessert?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Churchkhela_Tbilisi_Georgia.jpg/640px-Churchkhela_Tbilisi_Georgia.jpg"
     },
     "pestil_bastik": {
         "category": "YÖRESEL TATLI",
@@ -283,7 +283,7 @@ products = {
         "description": "Güneşte kurutulmuş, doğal meyve aromalı geleneksel Erzurum pestili.",
         "tags": ["Doğal", "Enerji"],
         "price": 450,
-        "image": "https://image.pollinations.ai/prompt/turkish_fruit_leather_pestil_with_walnuts_food_photography?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bast%C4%B1k_ya_da_pestil.jpg/640px-Bast%C4%B1k_ya_da_pestil.jpg"
     },
     "yayla_tereyagi": {
         "category": "DOĞAL SÜT ÜRÜNÜ",
@@ -291,7 +291,7 @@ products = {
         "description": "Erzurum yaylalarında otlayan şanslı ineklerin sütünden elde edilen katkısız köy tereyağı.",
         "tags": ["Katkısız", "Mis Kokulu"],
         "price": 550,
-        "image": "https://image.pollinations.ai/prompt/block_of_fresh_yellow_natural_butter_on_wooden_board_rustic?width=600&height=400&nologo=true"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Butter_2016-01-20.jpg/640px-Butter_2016-01-20.jpg"
     }
 }
 
@@ -312,9 +312,15 @@ for p_id, p in products.items():
     tags_html = "".join([f"<span>{tag}</span>" for tag in p['tags']])
     
     st.markdown(f"""
-    <div class="product-glass-card">
+    <div class="product-glass-card" style="padding-bottom: 0px; margin-bottom: 0px;">
         <div class="cat-tag">{p['category']}</div>
-        <img src="{p['image']}" style="width:100%; height:250px; object-fit:cover; border-radius:18px; margin-bottom:15px;" alt="{p['name']}">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.image(p['image'], use_container_width=True)
+    
+    st.markdown(f"""
+    <div class="product-glass-card" style="padding-top: 15px; margin-top: -10px;">
         <div class="p-title">{p['name']}</div>
         <div class="p-desc">{p['description']}</div>
         <div class="p-tags">{tags_html}</div>
