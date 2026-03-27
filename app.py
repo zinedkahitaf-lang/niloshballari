@@ -268,7 +268,7 @@ products = {
         "name": "Bol Cevizli Sucuk",
         "description": "Bol cevizli ve nefis üzüm şırası ile hazırlanan mükemmel enerji veren atıştırmalık.",
         "tags": ["Ceviz Dolgulu", "Organik"],
-        "price": 850 # Was 600 + 250
+        "price": 550
     }
 }
 
