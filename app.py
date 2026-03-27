@@ -282,18 +282,13 @@ st.markdown("<h2 style='text-align: center; margin-bottom: 30px;'>Koleksiyonumuz
 for p_id, p in products.items():
     tags_html = "".join([f"<span>{tag}</span>" for tag in p['tags']])
     
+    # Load image as base64 - same method as logo (which works!)
+    img_b64 = get_base64(p['image'])
+    
     st.markdown(f"""
     <div class="product-glass-card">
         <div class="cat-tag">{p['category']}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # LOCAL IMAGE - guaranteed to show!
-    if os.path.exists(p['image']):
-        st.image(p['image'], use_container_width=True)
-    
-    st.markdown(f"""
-    <div style="background: rgba(255,255,255,0.9); border-radius: 0 0 24px 24px; padding: 20px 30px; border: 1px solid rgba(234,221,199,0.5); border-top: none; margin-top: -15px; margin-bottom: 5px;">
+        <img src="data:image/png;base64,{img_b64}" style="width:100%; height:280px; object-fit:cover; border-radius:18px; margin: 15px 0;" alt="{p['name']}">
         <div class="p-title">{p['name']}</div>
         <div class="p-desc">{p['description']}</div>
         <div class="p-tags">{tags_html}</div>
