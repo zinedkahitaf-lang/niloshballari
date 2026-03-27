@@ -1,6 +1,10 @@
 import streamlit as st
 import urllib.parse
 import os
+import pathlib
+from PIL import Image
+
+BASE_DIR = pathlib.Path(__file__).parent
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Niloş Balları | Erzurum Yöresel Lezzetleri", page_icon=":honey_pot:", layout="centered")
@@ -180,12 +184,12 @@ products = {
     }
 }
 
-# --- LOGO (st.image ile - kesin çalışır) ---
+# --- LOGO ---
 col_logo_left, col_logo_center, col_logo_right = st.columns([1, 2, 1])
 with col_logo_center:
-    if os.path.exists("logo.png"):
-        logo_bytes = open("logo.png", "rb").read()
-        st.image(logo_bytes, width="stretch")
+    logo_path = BASE_DIR / "logo.png"
+    if logo_path.exists():
+        st.image(Image.open(logo_path))
 
 st.markdown("""
 <div style="text-align: center; margin-bottom: 40px;">
@@ -196,10 +200,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- TANITIM VİDEOSU ---
-if os.path.exists("tanitim.mp4"):
+video_path = BASE_DIR / "tanitim.mp4"
+if video_path.exists():
     st.markdown("## Tanıtım Videomuz")
-    video_bytes = open("tanitim.mp4", "rb").read()
-    st.video(video_bytes)
+    st.video(str(video_path))
     st.markdown("---")
 
 # --- ÜRÜNLER ---
@@ -210,11 +214,10 @@ for p_id, p in products.items():
     
     st.markdown(f'<div class="cat-label">{p["category"]}</div>', unsafe_allow_html=True)
     
-    # FOTOĞRAF: bytes olarak oku ve st.image ile göster - BU KESİN ÇALIŞIR
-    img_path = p['image']
-    if os.path.exists(img_path):
-        img_bytes = open(img_path, "rb").read()
-        st.image(img_bytes, width="stretch")
+    # FOTOĞRAF: PIL Image ile aç ve göster
+    img_path = BASE_DIR / p['image']
+    if img_path.exists():
+        st.image(Image.open(img_path))
     
     st.markdown(f"""
     <div class="info-card">
