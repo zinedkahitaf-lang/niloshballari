@@ -103,55 +103,39 @@ st.markdown("""
     }
     .whatsapp-btn:hover { transform: translateY(-3px); }
     
-    /* FLOATING BEE & SPEECH BUBBLE */
-    .bee-container {
+    /* UNIFIED BEE BOT STYLES */
+    .bee-fixed-container {
         position: fixed;
         top: 20px;
         right: 20px;
         z-index: 10000;
         display: flex;
         align-items: center;
-        flex-direction: row-reverse;
+        gap: 15px;
     }
-    .bee-speech-bubble {
+    .bee-bubble-v5 {
         background: white;
-        border: 2px solid #D4AF37;
-        padding: 15px 20px;
-        border-radius: 20px 20px 0 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-right: 15px;
-        max-width: 250px;
-        font-size: 0.95rem;
-        font-weight: 600;
+        border: 3px solid #D4AF37;
+        padding: 12px 18px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        font-size: 1rem;
+        font-weight: 700;
         color: #2C241B;
-        position: relative;
-        animation: bubble-fade 0.5s ease-out;
+        max-width: 320px;
+        line-height: 1.4;
     }
-    .bee-speech-bubble::after {
-        content: "";
-        position: absolute;
-        right: -10px;
-        bottom: 10px;
-        border-width: 10px 0 10px 10px;
-        border-style: solid;
-        border-color: transparent transparent transparent #D4AF37;
-    }
-    @keyframes bubble-fade {
-        from { opacity: 0; transform: translateX(20px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-    
-    .chat-panel-v2 {
+    .chat-panel-v3 {
         position: fixed;
         top: 130px;
         right: 20px;
-        width: 350px;
+        width: 380px;
         background: white;
         border-radius: 25px;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        box-shadow: 0 15px 50px rgba(0,0,0,0.2);
         z-index: 9999;
         border: 1px solid #EADDC7;
-        padding: 15px;
+        padding: 20px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -313,47 +297,51 @@ else:
         st.session_state['cart'] = {}
         st.rerun()
 
-# --- ARIKOVANI ASİSTANI (Geveze Bal Arısı) ---
+# --- ARIKOVANI ASİSTANI (V5 - Son Düzenleme) ---
 st.markdown("""
 <style>
-    /* Sadece Bee butonuna özel stil */
-    button[key="bee_btn_v3"] {
+    /* Bee Butonu İçin Özel Stil */
+    div.stButton > button[key="bee_btn_final"] {
         background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37) !important;
         width: 100px !important;
         height: 100px !important;
         border-radius: 50% !important;
-        font-size: 55px !important;
-        box-shadow: 0 15px 45px rgba(212, 175, 55, 0.4) !important;
+        font-size: 60px !important;
+        box-shadow: 0 15px 45px rgba(212, 175, 55, 0.5) !important;
         border: 4px solid #ffffff !important;
         cursor: pointer !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
         padding: 0 !important;
-        line-height: 1 !important;
+        transition: 0.3s all !important;
+    }
+    div.stButton > button[key="bee_btn_final"]:hover {
+        transform: scale(1.1) rotate(10deg) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Floating Bee & Bubble Container (CSS in style block at top of app.py)
-st.markdown(f"""
-<div class="bee-container">
-    <div class="bee-speech-bubble">
+# Tek bir kapsayıcıda Buton ve Balon
+st.markdown('<div class="bee-fixed-container">', unsafe_allow_html=True)
+
+# Sol tarafta Konuşma Balonu
+st.markdown("""
+    <div class="bee-bubble-v5">
         Merhaba ben NİLOŞUN bal arısıyım bana istediğini sorabilirsin 🐝
     </div>
-</div>
 """, unsafe_allow_html=True)
 
-# Fixed Bee Button
-st.markdown('<div style="position: fixed; top: 20px; right: 20px; z-index: 10001;">', unsafe_allow_html=True)
-if st.button("🐝", key="bee_btn_v3"):
+# Sağ tarafta Buton (Tıklanabilir olması için st.button kullanılır)
+# Butonun yerini CSS ile containersız belirleyeceğiz.
+st.markdown('<div style="z-index:10001;">', unsafe_allow_html=True)
+if st.button("🐝", key="bee_btn_final"):
     st.session_state.show_chat = not st.session_state.show_chat
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Persistent Chat Window
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Sohbet Penceresi
 if st.session_state.show_chat:
     with st.container():
-        st.markdown('<div class="chat-panel-v2">', unsafe_allow_html=True)
+        st.markdown('<div class="chat-panel-v3">', unsafe_allow_html=True)
         st.markdown("#### 🍯 Arıkovanı Asistanı")
         
         try:
@@ -363,17 +351,16 @@ if st.session_state.show_chat:
             p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
             system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kapıda ödeme var de. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
 
-            chat_h = st.container(height=300)
-            with chat_h:
+            ch_container = st.container(height=350)
+            with ch_container:
                 for message in st.session_state.messages:
                     with st.chat_message(message["role"]):
                         st.markdown(message["content"])
 
-            if prompt := st.chat_input("Buraya yazın..."):
+            if prompt := st.chat_input("Yazmaya başlayın..."):
                 st.session_state.messages.append({"role": "user", "content": prompt})
                 response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role":"system","content":system_msg}]+st.session_state.messages)
-                full_resp = response.choices[0].message.content
-                st.session_state.messages.append({"role": "assistant", "content": full_resp})
+                st.session_state.messages.append({"role": "assistant", "content": response.choices[0].message.content})
                 st.rerun()
 
         except Exception:
