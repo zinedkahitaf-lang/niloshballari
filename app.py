@@ -272,7 +272,7 @@ with st.sidebar:
         
         # Botun her şeyi bilmesi için ürün listesi
         p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
-        system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
+        system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Kapıda ödeme seçeneğimizin mevcut olduğunu mutlaka belirt. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
 
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
