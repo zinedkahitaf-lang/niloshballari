@@ -106,16 +106,16 @@ st.markdown("""
     /* FLOATING BEE BUTTON & CHAT PANEL */
     .chatbot-button {
         position: fixed;
-        bottom: 30px;
+        top: 30px;
         right: 30px;
         background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37);
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 35px;
+        font-size: 50px;
         box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
         cursor: pointer;
         z-index: 9999;
@@ -130,10 +130,10 @@ st.markdown("""
     }
     .chat-panel {
         position: fixed;
-        bottom: 110px;
+        top: 130px;
         right: 30px;
-        width: 350px;
-        max-height: 500px;
+        width: 380px;
+        max-height: 550px;
         background: white;
         border-radius: 25px;
         box-shadow: 0 15px 50px rgba(0,0,0,0.15);
@@ -322,21 +322,25 @@ st.markdown("""
     /* target specific button by data-testid or similar if possible, but we'll use a simpler streamlit way */
     div.stButton > button[kind="secondary"] {
         position: fixed;
-        bottom: 30px;
+        top: 30px;
         right: 30px;
         background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37) !important;
-        width: 70px !important;
-        height: 70px !important;
+        width: 100px !important;
+        height: 100px !important;
         border-radius: 50% !important;
-        font-size: 35px !important;
-        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4) !important;
+        font-size: 60px !important;
+        box-shadow: 0 15px 45px rgba(212, 175, 55, 0.5) !important;
         z-index: 9999 !important;
-        border: 3px solid #ffffff !important;
+        border: 4px solid #ffffff !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         padding: 0 !important;
         line-height: 1 !important;
+        transition: 0.3s all !important;
+    }
+    div.stButton > button[kind="secondary"]:hover {
+        transform: scale(1.1) rotate(10deg) !important;
     }
 </style>
 """, unsafe_allow_html=True)
