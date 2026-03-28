@@ -102,6 +102,59 @@ st.markdown("""
         box-shadow: 0 15px 30px rgba(37,211,102,0.3);
     }
     .whatsapp-btn:hover { transform: translateY(-3px); }
+    
+    /* FLOATING BEE BUTTON & CHAT PANEL */
+    .chatbot-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37);
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+        cursor: pointer;
+        z-index: 9999;
+        border: 3px solid #ffffff;
+        animation: bee-float 3s ease-in-out infinite;
+        transition: transform 0.3s;
+    }
+    .chatbot-button:hover { transform: scale(1.1) rotate(15deg); }
+    @keyframes bee-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .chat-panel {
+        position: fixed;
+        bottom: 110px;
+        right: 30px;
+        width: 350px;
+        max-height: 500px;
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        z-index: 9998;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #EADDC7;
+        font-family: 'Outfit', sans-serif;
+    }
+    .chat-header {
+        background: linear-gradient(90deg, #2C241B, #463A2E);
+        color: #FFDF73;
+        padding: 15px 20px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    /* Hide scrollbar but allow scrolling */
+    .stChatFloating { overflow-y: auto; scrollbar-width: thin; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -110,6 +163,8 @@ if 'cart' not in st.session_state:
     st.session_state['cart'] = {}
 if 'messages' not in st.session_state:
     st.session_state['messages'] = []
+if 'show_chat' not in st.session_state:
+    st.session_state['show_chat'] = False
 
 # --- ÜRÜN VERİLERİ ---
 products = {
@@ -260,35 +315,78 @@ else:
         st.session_state['cart'] = {}
         st.rerun()
 
-# --- ARIKOVANI ASİSTANI (CHATBOT) ---
-with st.sidebar:
-    st.markdown("### 🍯 Arıkovanı Asistanı")
-    st.info("Ben Niloş Balları'nın şifa uzmanıyım. Sorularınız için buradayım!")
-    
-    # Güvenli API Anahtarı (Streamlit Cloud Secrets'tan okur)
-    try:
-        api_key = st.secrets["OPENAI_API_KEY"]
-        client = openai.OpenAI(api_key=api_key)
+# --- ARIKOVANI ASİSTANI (Görünmez Mantık ve Yüzen Chat) ---
+# Floating Bee Button (Custom CSS targetable button)
+st.markdown("""
+<style>
+    /* target specific button by data-testid or similar if possible, but we'll use a simpler streamlit way */
+    div.stButton > button[kind="secondary"] {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37) !important;
+        width: 70px !important;
+        height: 70px !important;
+        border-radius: 50% !important;
+        font-size: 35px !important;
+        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4) !important;
+        z-index: 9999 !important;
+        border: 3px solid #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Toggle chat state with the floating bee
+if st.button("🐝", key="bee_btn", help="Arıkovanı Asistanı ile konuş"):
+    st.session_state.show_chat = not st.session_state.show_chat
+
+# Chat Window Logic
+if st.session_state.show_chat:
+    with st.container():
+        # Using a container with custom CSS class isn't directly supported easily, 
+        # so we display it at the end of the page as a dedicated block.
+        st.markdown("---")
+        st.markdown("### 🍯 Arıkovanı Asistanı")
+        st.info("Ben Niloş Balları'nın şifa uzmanıyım. Kapıda ödeme seçeneğimizin mevcut olduğunu unutmayın! Sorularınız için buradayım!")
         
-        # Botun her şeyi bilmesi için ürün listesi
-        p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
-        system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Kapıda ödeme seçeneğimizin mevcut olduğunu mutlaka belirt. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
+        try:
+            api_key = st.secrets["OPENAI_API_KEY"]
+            client = openai.OpenAI(api_key=api_key)
+            
+            p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
+            system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Kapıda ödeme seçeneğimizin mevcut olduğunu mutlaka belirt. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
 
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+            # Chat history container
+            chat_container = st.container(height=300)
+            with chat_container:
+                for message in st.session_state.messages:
+                    with st.chat_message(message["role"]):
+                        st.markdown(message["content"])
 
-        if prompt := st.chat_input("Bana bir şey sor..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-            with st.chat_message("assistant"):
-                response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role":"system","content":system_msg}]+st.session_state.messages)
-                full_resp = response.choices[0].message.content
-                st.markdown(full_resp)
-            st.session_state.messages.append({"role": "assistant", "content": full_resp})
-    except Exception:
-        st.warning("🤖 Asistan şu an kovanında dinleniyor. (API Anahtarı eksik)")
+            if prompt := st.chat_input("Bana bir şey sor..."):
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                with chat_container:
+                    with st.chat_message("user"):
+                        st.markdown(prompt)
+                
+                with chat_container:
+                    with st.chat_message("assistant"):
+                        response = client.chat.completions.create(
+                            model="gpt-3.5-turbo", 
+                            messages=[{"role":"system","content":system_msg}]+st.session_state.messages
+                        )
+                        full_resp = response.choices[0].message.content
+                        st.markdown(full_resp)
+                st.session_state.messages.append({"role": "assistant", "content": full_resp})
+                st.rerun() # Refresh to keep chat at bottom
+
+        except Exception:
+            st.warning("🤖 Asistan şu an kovanında dinleniyor. (API Anahtarı eksik)")
 
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: #8C7A61; font-size: 0.8rem;'>© 2026 Niloş Balları - Erzurum Karayazı Köy Ürünleri</div>", unsafe_allow_html=True)
