@@ -103,58 +103,56 @@ st.markdown("""
     }
     .whatsapp-btn:hover { transform: translateY(-3px); }
     
-    /* FLOATING BEE BUTTON & CHAT PANEL */
-    .chatbot-button {
+    /* FLOATING BEE & SPEECH BUBBLE */
+    .bee-container {
         position: fixed;
-        top: 30px;
-        right: 30px;
-        background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37);
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 50px;
-        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
-        cursor: pointer;
-        z-index: 9999;
-        border: 3px solid #ffffff;
-        animation: bee-float 3s ease-in-out infinite;
-        transition: transform 0.3s;
+        flex-direction: row-reverse;
     }
-    .chatbot-button:hover { transform: scale(1.1) rotate(15deg); }
-    @keyframes bee-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    .bee-speech-bubble {
+        background: white;
+        border: 2px solid #D4AF37;
+        padding: 15px 20px;
+        border-radius: 20px 20px 0 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-right: 15px;
+        max-width: 250px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #2C241B;
+        position: relative;
+        animation: bubble-fade 0.5s ease-out;
     }
-    .chat-panel {
+    .bee-speech-bubble::after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        bottom: 10px;
+        border-width: 10px 0 10px 10px;
+        border-style: solid;
+        border-color: transparent transparent transparent #D4AF37;
+    }
+    @keyframes bubble-fade {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .chat-panel-v2 {
         position: fixed;
         top: 130px;
-        right: 30px;
-        width: 380px;
-        max-height: 550px;
+        right: 20px;
+        width: 350px;
         background: white;
         border-radius: 25px;
         box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-        z-index: 9998;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        z-index: 9999;
         border: 1px solid #EADDC7;
-        font-family: 'Outfit', sans-serif;
+        padding: 15px;
     }
-    .chat-header {
-        background: linear-gradient(90deg, #2C241B, #463A2E);
-        color: #FFDF73;
-        padding: 15px 20px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    /* Hide scrollbar but allow scrolling */
-    .stChatFloating { overflow-y: auto; scrollbar-width: thin; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -315,82 +313,72 @@ else:
         st.session_state['cart'] = {}
         st.rerun()
 
-# --- ARIKOVANI ASİSTANI (Görünmez Mantık ve Yüzen Chat) ---
-# Floating Bee Button (Custom CSS targetable button)
+# --- ARIKOVANI ASİSTANI (Geveze Bal Arısı) ---
 st.markdown("""
 <style>
-    /* target specific button by data-testid or similar if possible, but we'll use a simpler streamlit way */
-    div.stButton > button[kind="secondary"] {
-        position: fixed;
-        top: 30px;
-        right: 30px;
+    /* Sadece Bee butonuna özel stil */
+    button[key="bee_btn_v3"] {
         background: radial-gradient(circle at 30% 30%, #FFDF73, #D4AF37) !important;
         width: 100px !important;
         height: 100px !important;
         border-radius: 50% !important;
-        font-size: 60px !important;
-        box-shadow: 0 15px 45px rgba(212, 175, 55, 0.5) !important;
-        z-index: 9999 !important;
+        font-size: 55px !important;
+        box-shadow: 0 15px 45px rgba(212, 175, 55, 0.4) !important;
         border: 4px solid #ffffff !important;
+        cursor: pointer !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         padding: 0 !important;
         line-height: 1 !important;
-        transition: 0.3s all !important;
-    }
-    div.stButton > button[kind="secondary"]:hover {
-        transform: scale(1.1) rotate(10deg) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Toggle chat state with the floating bee
-if st.button("🐝", key="bee_btn", help="Arıkovanı Asistanı ile konuş"):
-    st.session_state.show_chat = not st.session_state.show_chat
+# Floating Bee & Bubble Container (CSS in style block at top of app.py)
+st.markdown(f"""
+<div class="bee-container">
+    <div class="bee-speech-bubble">
+        Merhaba ben Niloş'un bal arısı, bana istediğini sorabilirsin 🐝
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-# Chat Window Logic
+# Fixed Bee Button
+st.markdown('<div style="position: fixed; top: 20px; right: 20px; z-index: 10001;">', unsafe_allow_html=True)
+if st.button("🐝", key="bee_btn_v3"):
+    st.session_state.show_chat = not st.session_state.show_chat
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Persistent Chat Window
 if st.session_state.show_chat:
     with st.container():
-        # Using a container with custom CSS class isn't directly supported easily, 
-        # so we display it at the end of the page as a dedicated block.
-        st.markdown("---")
-        st.markdown("### 🍯 Arıkovanı Asistanı")
-        st.info("Ben Niloş Balları'nın şifa uzmanıyım. Kapıda ödeme seçeneğimizin mevcut olduğunu unutmayın! Sorularınız için buradayım!")
+        st.markdown('<div class="chat-panel-v2">', unsafe_allow_html=True)
+        st.markdown("#### 🍯 Arıkovanı Asistanı")
         
         try:
             api_key = st.secrets["OPENAI_API_KEY"]
             client = openai.OpenAI(api_key=api_key)
             
             p_list = "\n".join([f"- {v['name']}: {v['price']} TL, {v['description']}" for k, v in products.items()])
-            system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kısa, öz ve cana yakın konuş. Kapıda ödeme seçeneğimizin mevcut olduğunu mutlaka belirt. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
+            system_msg = f"Sen Erzurumlu, nazik ve bilgili 'Arıkovanı Asistanı'sın. Ürünler: {p_list}. Kapıda ödeme var de. Sipariş için 0542 563 32 89 WhatsApp hattını hatırlat."
 
-            # Chat history container
-            chat_container = st.container(height=300)
-            with chat_container:
+            chat_h = st.container(height=300)
+            with chat_h:
                 for message in st.session_state.messages:
                     with st.chat_message(message["role"]):
                         st.markdown(message["content"])
 
-            if prompt := st.chat_input("Bana bir şey sor..."):
+            if prompt := st.chat_input("Buraya yazın..."):
                 st.session_state.messages.append({"role": "user", "content": prompt})
-                with chat_container:
-                    with st.chat_message("user"):
-                        st.markdown(prompt)
-                
-                with chat_container:
-                    with st.chat_message("assistant"):
-                        response = client.chat.completions.create(
-                            model="gpt-3.5-turbo", 
-                            messages=[{"role":"system","content":system_msg}]+st.session_state.messages
-                        )
-                        full_resp = response.choices[0].message.content
-                        st.markdown(full_resp)
+                response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role":"system","content":system_msg}]+st.session_state.messages)
+                full_resp = response.choices[0].message.content
                 st.session_state.messages.append({"role": "assistant", "content": full_resp})
-                st.rerun() # Refresh to keep chat at bottom
+                st.rerun()
 
         except Exception:
-            st.warning("🤖 Asistan şu an kovanında dinleniyor. (API Anahtarı eksik)")
+            st.warning("🤖 Asistan uykuda. (API Anahtarı eksik)")
+        st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("---")
 st.markdown("<div style='text-align: center; color: #8C7A61; font-size: 0.8rem;'>© 2026 Niloş Balları - Erzurum Karayazı Köy Ürünleri</div>", unsafe_allow_html=True)
