@@ -339,7 +339,7 @@ st.markdown("""
 st.markdown(f"""
 <div class="bee-container">
     <div class="bee-speech-bubble">
-        Merhaba ben Niloş'un bal arısı, bana istediğini sorabilirsin 🐝
+        Merhaba ben NİLOŞUN bal arısıyım bana istediğini sorabilirsin 🐝
     </div>
 </div>
 """, unsafe_allow_html=True)
